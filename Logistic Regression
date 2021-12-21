@@ -1,0 +1,31 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+
+# Reading and cleaning the data
+loan = pd.read_csv("loans_basic.csv")
+loan.head()
+type(loan)
+loan.isna().sum(axis= 0 )
+loan.isnull().sum().sum()
+loan.dropna(axis = 0, inplace = True)
+loan.isnull().sum().sum()  # check whether now it is zero or not
+loan["not.fully.paid"].value_counts()
+
+# Selecting dependent and independent variables
+X = loan.drop("not.fully.paid", axis = 1)
+Y = loan["not.fully.paid"]
+
+# Splitting the data in training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3, random_state=4)
+
+#Create Logistic Regression model
+lr  = LogisticRegression(penalty = 'l1', C = 0.1, solver = 'liblinear') # creating object of Logistic Regression class # Lasso Regression, Note : l1 = lasso and l2 = ridge
+model1 = lr.fit(X_train, y_train)  # calling fit function which returns object as output
+y_pred1 = model1.predict(X_test)
+print("Accuracy Score : ",accuracy_score(y_test, y_pred1))
+print(classification_report(y_test, y_pred1))
+print(classification_report(y_true = y_test, y_pred1 = pred_test_LR, target_names = ['People paying back','Defaulters']))
